@@ -26,6 +26,8 @@ export const BaseScheduledEmail = (
     timeFormat: TimeFormat | undefined;
     isOrganizer?: boolean;
     reassigned?: { name: string | null; email: string; reason?: string; byUser?: string };
+    titleOverride?: string;
+    hideSubtitle?: boolean;
   } & Partial<React.ComponentProps<typeof BaseEmailHtml>>
 ) => {
   const { t, timeZone, locale, timeFormat: timeFormat_ } = props;
@@ -66,19 +68,25 @@ export const BaseScheduledEmail = (
       hideLogo={Boolean(props.calEvent.platformClientId) || Boolean(props.calEvent.hideBranding)}
       headerType={props.headerType || "checkCircle"}
       subject={props.subject || subject}
-      title={t(
-        props.title
-          ? props.title
-          : props.calEvent.recurringEvent?.count
-            ? "your_event_has_been_scheduled_recurring"
-            : "your_event_has_been_scheduled"
-      )}
+      title={
+        props.titleOverride ??
+        t(
+          props.title
+            ? props.title
+            : props.calEvent.recurringEvent?.count
+              ? "your_event_has_been_scheduled_recurring"
+              : "your_event_has_been_scheduled"
+        )
+      }
       callToAction={
         props.callToAction === null
           ? null
           : props.callToAction || <ManageLink attendee={props.attendee} calEvent={props.calEvent} />
       }
-      subtitle={props.subtitle || <>{t("emailed_you_and_any_other_attendees")}</>}>
+      closingContent={props.closingContent}
+      subtitle={
+        props.hideSubtitle ? undefined : props.subtitle || <>{t("emailed_you_and_any_other_attendees")}</>
+      }>
       {props.calEvent.rejectionReason && (
         <>
           <Info label={t("rejection_reason")} description={props.calEvent.rejectionReason} withSpacer />
