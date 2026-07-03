@@ -25,6 +25,7 @@ export const BaseEmailHtml = (props: {
   subtitle?: React.ReactNode | string;
   headerType?: BodyHeadType;
   hideLogo?: boolean;
+  closingContent?: React.ReactNode;
 }) => {
   return (
     <Html>
@@ -165,6 +166,7 @@ export const BaseEmailHtml = (props: {
                 </td>
               </Row>
             </div>
+            {props.closingContent}
           </div>
           <RawHtml html="<!--[if mso | IE]></td></tr></table><![endif]-->" />
           <EmailFooterBand />
